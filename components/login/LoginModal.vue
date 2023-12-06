@@ -1,0 +1,94 @@
+<script setup lang="ts">
+import axios from "axios";
+
+const config = useRuntimeConfig();
+const SERVER_HOST = config.public.SERVER_HOST;
+
+const emit = defineEmits<{ (e: "close", value: boolean): void }>();
+
+const username = ref("");
+const password = ref("");
+const signupPassword = ref("");
+const signupUsername = ref("");
+const showSignup = ref(false);
+
+async function signup() {
+  await axios.post(`${SERVER_HOST}/users`, {
+    username: signupUsername.value,
+    password: signupPassword.value,
+  });
+
+  showSignup.value = false;
+}
+
+async function login() {
+  await axios.post(`${SERVER_HOST}/authenticate`, {
+    username: username.value,
+    password: password.value,
+  });
+
+  emit("close", true);
+}
+</script>
+
+<template>
+  <UContainer v-if="!showSignup" class="flex flex-col">
+    <button @click="emit('close', true)">
+      <UIcon
+        name="i-material-symbols-close"
+        dynamic
+        class="absolute top-0 right-0 m-6"
+      />
+    </button>
+
+    <h1 class="self-center m-4 mb-20 text-xl">Login</h1>
+    <UInput
+      placeholder="Username"
+      type="text"
+      v-model="username"
+      class="m-4 self-center"
+    />
+    <UInput
+      placeholder="Password"
+      type="password"
+      v-model="password"
+      class="m-4 self-center"
+    />
+    <UButton @click="login" class="self-center m-4"> Login</UButton>
+    <button @click="showSignup = true">
+      <ULink class="mt-16 mb-4">Sign up</ULink>
+    </button>
+  </UContainer>
+  <UContainer v-else class="flex flex-col"
+    ><button @click="emit('close', true)">
+      <UIcon
+        name="i-material-symbols-close"
+        dynamic
+        class="absolute top-0 right-0 m-6"
+      />
+    </button>
+
+    <h1 class="self-center m-4 mb-20 text-xl">Sign up</h1>
+    <UInput
+      placeholder="Username"
+      type="text"
+      v-model="signupUsername"
+      class="m-4 self-center"
+    />
+    <UInput
+      placeholder="Password"
+      type="password"
+      v-model="signupPassword"
+      class="m-4 self-center"
+    />
+    <UButton @click="signup" class="self-center m-4"> Sign up</UButton>
+    <div>
+      Already have an account?
+      <button @click="showSignup = false">
+        <ULink class="mt-16 mb-4">Log in</ULink>
+      </button>
+    </div>
+  </UContainer>
+</template>
+
+<style lang="scss"></style>
