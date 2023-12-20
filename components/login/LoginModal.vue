@@ -1,5 +1,15 @@
 <script setup lang="ts">
 import axios from "axios";
+import { useRuntimeConfig } from "nuxt/app";
+
+import { ref } from "vue";
+import { userStore } from "~/stores/user";
+import { storeToRefs } from "pinia";
+import { watch } from "vue";
+
+let useUserStore = userStore();
+
+const { user, temp } = storeToRefs(useUserStore);
 
 const config = useRuntimeConfig();
 const SERVER_HOST = config.public.SERVER_HOST;
@@ -11,6 +21,18 @@ const password = ref("");
 const signupPassword = ref("");
 const signupUsername = ref("");
 const showSignup = ref(false);
+
+user.value = {
+  userid: "123",
+  email: "123",
+  password: "123",
+  refreshToken: "123",
+  watchList: ["213231"],
+};
+
+watch(user, () => {
+  console.log(user.value);
+});
 
 async function signup() {
   await axios.post(`${SERVER_HOST}/users`, {
@@ -28,6 +50,7 @@ async function login() {
   });
 
   emit("close", true);
+  console.log(user.value);
 }
 </script>
 

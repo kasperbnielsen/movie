@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { ref, watch } from "vue";
+
 const searchInput = ref("");
 const open = ref(false);
 const modalOpen = ref(false);
@@ -42,7 +44,7 @@ watch(searchInput, () => {
         >Login</UButton
       >
       <UModal v-model="modalOpen">
-        <LoginModal @close="(event) => (modalOpen = !event)" />
+        <LoginModal @close="(event: any) => (modalOpen = !event)" />
       </UModal>
     </UContainer>
   </UContainer>
